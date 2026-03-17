@@ -1,33 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌱 Agro Análises Dashboard
 
-## Getting Started
+Dashboard interativo para análise de dados agrícolas, com foco em visualização moderna, performance e experiência do usuário.
 
-First, run the development server:
+---
+
+## 📸 Preview
+
+![Preview do Projeto](./preview.png)
+
+---
+
+## 🧠 Sobre o Projeto
+
+O **Agro Análises** é uma plataforma web desenvolvida para monitoramento e análise de dados do setor agrícola, permitindo visualizar indicadores como:
+
+- Área plantada
+- Produtividade média
+- Evolução da produção
+- Distribuição por cultura
+- Status de insumos
+
+O projeto foi desenvolvido com foco em **UX moderna**, **componentização** e **boas práticas de frontend**.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+- ⚛️ React
+- ⚡ Next.js
+- 🎨 Tailwind CSS
+- 📊 Recharts (gráficos)
+- 🎭 Framer Motion (animações)
+- 🧩 Lucide Icons
+
+---
+
+## ✨ Funcionalidades
+
+- 📊 Dashboard com múltiplos gráficos
+- 📈 Gráfico de linha (evolução de produção)
+- 🥧 Gráfico de pizza (distribuição)
+- 📦 Cards com indicadores principais
+- 📱 Layout responsivo (mobile e desktop)
+- 🎨 UI moderna com design limpo
+- ⚡ Animações suaves
+
+---
+
+## 📂 Estrutura do Projeto
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+src/
+├── app/
+│   └── page.tsx
+├── components/
+│   ├── layout/
+│   │   ├── SideBar.tsx
+│   │   ├── TopBar.tsx
+│   │   └── PageContainer.tsx
+│   └── ui/
+│       └── FadeIn.tsx
+├── hooks/
+│   └── useInView.ts
 
 ## Deploy on Vercel
 
