@@ -1,4 +1,8 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import { Menu } from "lucide-react"; 
+import SideBar from "./SideBar";
 
 interface PageContainerProps {
   title: string;
@@ -10,48 +14,57 @@ interface PageContainerProps {
 }
 
 export default function PageContainer({ 
-  title, 
-  topCards, 
-  middleCardLarge, 
-  middleCardSmall,
-  bottomCardSmall,
-  bottomCardLarge 
+  title, topCards, middleCardLarge, middleCardSmall, bottomCardSmall, bottomCardLarge 
 }: PageContainerProps) {
+  
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <div className="flex-1 flex flex-col h-full rounded-[2.5rem] bg-[#F4F7F6] overflow-hidden">
+    <div className="min-h-screen rounded-[2.5rem] bg-[#E2E9E7] relative">
       
-      <header className="px-10 py-8 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-[#2D4340] tracking-tight">{title}</h1>
-      </header>
+      {/* Botão Hambúrguer - Corrigido para ser visível no mobile */}
+      <button 
+        onClick={() => setIsMenuOpen(true)}
+        className="lg:hidden fixed top-35 left-6 z-40 p-2 bg-[#2D4340] text-white rounded-lg shadow-lg"
+      >
+        <Menu size={24} />
+      </button>
 
-      <main className="flex-1 px-10 pb-10 overflow-y-auto space-y-6">
+      {/* Drawer Mobile com a sua Sidebar Original */}
+      <div className={`fixed inset-0 z-[100] lg:hidden ${isMenuOpen ? "visible" : "invisible"}`}>
+        <div 
+          className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${isMenuOpen ? "opacity-100" : "opacity-0"}`}
+          onClick={() => setIsMenuOpen(false)} 
+        />
         
-        {/* LINHA 1 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {topCards}
+        <div className={`absolute left-0 top-0 h-full transition-transform duration-300 ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+           <SideBar onClose={() => setIsMenuOpen(false)} /> 
         </div>
+      </div>
 
-        {/* LINHA 2 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            {middleCardLarge}
-          </div>
-          <div className="col-span-1">
-            {middleCardSmall}
-          </div>
-        </div>
+      {/* Conteúdo Principal */}
+      <div className="p-4 lg:p-0">
+        <header className="mb-8 mt-16 lg:mt-0">
+          <span className="text-[#D4A24C] font-bold text-xs uppercase tracking-widest"></span>
+          <h1 className="text-2xl md:text-4xl font-bold text-[#2D4340]">{title}</h1>
+        </header>
 
-        {/* LINHA 3 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="col-span-1">
-            {bottomCardSmall}
+        <main className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {topCards}
           </div>
-          <div className="lg:col-span-2">
-            {bottomCardLarge}
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">{middleCardLarge}</div>
+            <div className="col-span-1">{middleCardSmall}</div>
           </div>
-        </div>
 
-      </main>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="col-span-1 order-2 lg:order-1">{bottomCardSmall}</div>
+            <div className="lg:col-span-2 order-1 lg:order-2">{bottomCardLarge}</div>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Bell, Search, Settings } from "lucide-react";
 
 export default function TopBar() {
   return (
-    <header className="h-20 w-full flex items-center justify-between px-10 bg-transparent">
+    <header className="h-16 lg:h-[72px] w-full flex items-center justify-between px-4 lg:px-10 bg-white">
       {/* Lado Esquerdo: Saudação Dinâmica */}
       <div className="flex flex-col">
         <span className="text-[10px] font-bold text-[#D4A24C] uppercase tracking-[0.2em]">
