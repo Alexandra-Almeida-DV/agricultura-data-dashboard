@@ -46,6 +46,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </div>
 
+        <BackToTop />
+
       </body>
     </html>
   );
