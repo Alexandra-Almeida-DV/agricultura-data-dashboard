@@ -1,6 +1,7 @@
 import SideBar from "@/components/layout/SideBar";
 import TopBar from "@/components/layout/TopBar";
 import "@/app/globals.css";
+import BackToTop from '@/components/ui/BackToTop';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
