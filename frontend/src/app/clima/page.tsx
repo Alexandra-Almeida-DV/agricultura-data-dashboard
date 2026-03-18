@@ -38,10 +38,12 @@ export default function ClimaPage() {
 
   useEffect(() => {
     const fetchData = (lat?: number, lon?: number) => {
-      const baseUrl = "http://localhost:8000/api/clima";
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       const currentUrl = lat && lon 
-        ? `${baseUrl}/coords?lat=${lat}&lon=${lon}` 
-        : `${baseUrl}/Araraquara`;
+        ? `${API_URL}/coords?lat=${lat}&lon=${lon}` 
+        : `${API_URL}/Araraquara`;
+
+      fetch(`${API_URL}/clima`)  
 
       // 1. Busca Clima Atual
       fetch(currentUrl)
@@ -56,7 +58,7 @@ export default function ClimaPage() {
         .catch(err => console.error("Erro Clima Atual:", err));
 
       // 2. Busca Previsão (Lógica simplificada consumindo o Backend Python)
-      fetch(`${baseUrl}/previsao/Araraquara`)
+      fetch(`${API_URL}/previsao/Araraquara`)
         .then(res => res.json())
         .then((data: WeatherData[]) => {
           if (Array.isArray(data) && data.length > 0) {
