@@ -9,7 +9,7 @@ import {
 import { CloudRain, Wind, Thermometer, Droplets, Snowflake, Sun } from "lucide-react";
 import { ValueType } from "recharts/types/component/DefaultTooltipContent";
 
-// Interfaces atualizadas para refletir o que o Python (FastAPI) envia
+// Interfaces sincronizadas com o retorno do seu Backend Python
 interface WeatherData {
   hora: string;
   temp: number;
@@ -29,21 +29,22 @@ const getRecomendacao = (v: number, u: number) => {
 };
 
 export default function ClimaPage() {
-  const [tempReal, setTempReal] = useState<number>(26);
-  const [umidadeAr, setUmidadeAr] = useState<number>(42);
-  const [vento, setVento] = useState<number>(14);
+  const [tempReal, setTempReal] = useState<number>(0);
+  const [umidadeAr, setUmidadeAr] = useState<number>(0);
+  const [vento, setVento] = useState<number>(0);
   const [rainData, setRainData] = useState<WeatherData[]>([]);
   const [probabilidadeChuva, setProbabilidadeChuva] = useState<number>(0);
   const [forecastTemp, setForecastTemp] = useState<{ hora: string, temp: number }[]>([]);
 
   useEffect(() => {
     const fetchData = (lat?: number, lon?: number) => {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const currentUrl = lat && lon 
-        ? `${API_URL}/coords?lat=${lat}&lon=${lon}` 
-        : `${API_URL}/Araraquara`;
+      // Ajuste crucial: Adicionando o /api que o seu Python exige
+      const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000") + "/api";
 
-      fetch(`${API_URL}/clima`)  
+      // Rota de Clima Atual (Sincronizada com o Python @app.get("/api/clima/..."))
+      const currentUrl = lat && lon 
+        ? `${API_URL}/clima/coords?lat=${lat}&lon=${lon}`
+        : `${API_URL}/clima/Araraquara`;
 
       // 1. Busca Clima Atual
       fetch(currentUrl)
@@ -55,36 +56,38 @@ export default function ClimaPage() {
             if (data.wind) setVento(Math.round(data.wind.speed * 3.6));
           }
         })
-        .catch(err => console.error("Erro Clima Atual:", err));
+        .catch(err => console.error("Erro ao buscar clima atual:", err));
 
-      // 2. Busca Previsão (Lógica simplificada consumindo o Backend Python)
-      fetch(`${API_URL}/previsao/Araraquara`)
+      // 2. Busca Previsão (Sincronizada com o Python @app.get("/api/clima/previsao/..."))
+      fetch(`${API_URL}/clima/previsao/Araraquara`)
         .then(res => res.json())
         .then((data: WeatherData[]) => {
           if (Array.isArray(data) && data.length > 0) {
-            // Volume de Chuva (Gráfico de Barras)
             setRainData(data);
             
-            // Tendência Térmica (Gráfico de Linha/Área)
-            // Agora apenas mapeamos o que o Python já formatou
+            // Mapeia os dados para o gráfico de linha (Tendência Térmica)
             const temps = data.map((item) => ({
               hora: item.hora,
               temp: item.temp
             }));
             setForecastTemp(temps);
 
-            // Probabilidade de Chuva (Card Central)
-            // O Python já envia em %, então pegamos o valor direto
+            // Pega a probabilidade de chuva do primeiro horário disponível
             setProbabilidadeChuva(data[0].pop);
           }
         })
-        .catch(err => console.error("Erro Previsão:", err));
+        .catch(err => console.error("Erro ao buscar previsão:", err));
     };
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => fetchData(pos.coords.latitude, pos.coords.longitude),
-      () => fetchData()
-    );
+    // Tenta pegar a localização do usuário ou usa Araraquara como padrão
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => fetchData(pos.coords.latitude, pos.coords.longitude),
+        () => fetchData()
+      );
+    } else {
+      fetchData();
+    }
   }, []);
 
   return (
