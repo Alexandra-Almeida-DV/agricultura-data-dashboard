@@ -27,7 +27,7 @@ export default function SideBar({ onClose }: SideBarProps) {
   ];
 
   return (
-    <aside className="w-64 bg-[#2D4340] text-white flex flex-col min-h-screen">
+    <aside className="w-64 bg-[#2D4340] text-white flex flex-col h-full">
       {onClose && (
         <button onClick={onClose} className="lg:hidden absolute top-4 right-4 text-slate-400 p-2 hover:text-white">
           <X size={24} />
